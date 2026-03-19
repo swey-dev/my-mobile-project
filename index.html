@@ -204,10 +204,10 @@
                 behemoth_z3: { img: 'behemoth.png', aura: '#ff0000', hp: 10000 },
                 reaper_z4: { img: 'frost_reaper.png', aura: '#00ffff', hp: 10000 },
                 titan_z4: { img: 'titan.png', aura: '#ffffff', hp: 50000 },
-                colossus_z5: { img: 'void_colossus.png', aura: '#ff00ff', hp: 500000 },
-                z2_hunt: { img: 'fire_wolf.png', aura: '#ff4500', hp: 400 },
-                z3_hunt: { img: 'behemoth.png', aura: '#ff0000', hp: 1500 },
-                z4_hunt: { img: 'frost_reaper.png', aura: '#00ffff', hp: 5000 },
+                colossus_z5: { img: 'void_colossus.png', aura: '#ff00ff', hp: 125000 },
+                z2_hunt: { img: 'slime.png', aura: '#ff4500', hp: 500 },
+                z3_hunt: { img: 'fire_wolf.png', aura: '#ff0000', hp: 2500 },
+                z4_hunt: { img: 'frost_reaper.png', aura: '#00ffff', hp: 10000 },
                 z5_hunt: { img: 'void_shade.png', aura: '#ff00ff', hp: 25000 }
             }
         };
@@ -320,9 +320,9 @@
                 let pMult = 1 + (Number(state.polish || 0) * 0.15);
                 let dmg = 34 * state.power * pMult;
 
-                if (state.hasRelic) dmg *= 10;
-                else if (state.hasScythe) dmg *= 4; 
-                else if (state.hasGreatsword) dmg *= 3; 
+                if (state.hasRelic) dmg *= 16;
+                else if (state.hasScythe) dmg *= 10; 
+                else if (state.hasGreatsword) dmg *= 6; 
                 else if (state.hasDagger) dmg *= 2; 
                 else if (state.hasSword) dmg *= 1.5;
 
