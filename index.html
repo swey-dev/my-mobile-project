@@ -15,8 +15,9 @@
             --zone2-purple: #a020f0;
             --zone3-orange: #ff4500;
             --zone4-cyan: #00ffff;
-            /* Dynamic UI Color Variable */
+            --zone5-magenta: #ff00ff;
             --current-aura: var(--aura-green);
+            --target-aura: #ffffff; /* Added for hit-shake fix */
         }
 
         body {
@@ -27,7 +28,6 @@
             touch-action: manipulation;
         }
 
-        /* Hacker Overlay */
         #hacker-overlay {
             position: fixed; inset: 0; background: rgba(0, 50, 0, 0.8);
             color: #0f0; font-family: 'Courier New', monospace;
@@ -35,13 +35,17 @@
             z-index: 9999; text-shadow: 0 0 10px #0f0; pointer-events: none;
         }
 
-        /* --- HUD --- */
         #hud-container {
-            position: absolute; top: 0; left: 0; width: 100%; height: 110px;
+            position: relative; width: 100%; height: 110px;
             z-index: 100; display: flex; align-items: center; justify-content: space-between;
-            padding: 0 15px; box-sizing: border-box;
-            background: linear-gradient(180deg, rgba(15, 25, 35, 0.9) 0%, rgba(15, 25, 35, 0.4) 100%);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(8px);
+            padding: 0 15px; box-sizing: border-box; flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
         }
 
         .orb-wrapper { position: relative; width: 85px; height: 85px; display: flex; justify-content: center; align-items: center; flex-shrink: 0; }
@@ -69,7 +73,6 @@
         .inventory-brief { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; font-size: 0.9rem; font-weight: 900; min-width: 90px; }
         #zone-mult-ui { font-size: 0.6rem; color: var(--aura-green); opacity: 0.8; margin-top: -2px; }
 
-        /* --- TRAVEL GATE --- */
         #travel-gate {
             position: absolute; top: 125px; left: 50%; transform: translateX(-50%);
             padding: 10px 20px; background: rgba(160, 32, 240, 0.6);
@@ -78,27 +81,25 @@
             z-index: 500; cursor: pointer; text-align: center; animation: pulse 2s infinite;
         }
 
-        @keyframes pulse {
-            0% { transform: translateX(-50%) scale(1); box-shadow: 0 0 5px white; }
-            50% { transform: translateX(-50%) scale(1.05); box-shadow: 0 0 25px var(--zone4-cyan); }
-            100% { transform: translateX(-50%) scale(1); box-shadow: 0 0 5px white; }
-        }
-
-        /* --- WORLD --- */
-        #world-container { flex: 1; position: relative; display: flex; justify-content: center; align-items: center; overflow: visible; }
+        #world-container { flex: 1; position: relative; display: flex; justify-content: center; align-items: center; overflow: visible; min-height: 0; }
         #game-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: url('background.png') no-repeat center center; background-size: cover; z-index: 0; transition: 3s ease-in-out; }
-        @keyframes haze { 0%, 100% { filter: hue-rotate(0deg) contrast(1); } 50% { filter: hue-rotate(10deg) contrast(1.2) brightness(1.1); transform: scale(1.01); } }
-        .heat-haze { animation: haze 4s infinite ease-in-out; }
-
-        .target-img { width: 70vw; max-width: 260px; z-index: 10; transition: 0.4s; opacity: 1; padding: 50px; object-fit: contain; }
-        .boss-style { width: 85vw; max-width: 320px; }
-        .wolf-boss { width: 90vw; max-width: 380px; animation: breath 2s infinite ease-in-out; }
+        
+        .target-img { 
+            width: 75vw; max-width: 260px; max-height: calc(100vh - 280px); z-index: 10; transition: 0.4s; opacity: 1; object-fit: contain; 
+            filter: drop-shadow(0 0 25px var(--target-aura)); 
+            will-change: transform, filter; 
+        }
+        .boss-style { width: 85vw; max-width: 320px; max-height: calc(100vh - 280px); }
+        .wolf-boss { width: 90vw; max-width: 400px; max-height: calc(100vh - 280px); animation: breath 2s infinite ease-in-out; }
+        
         @keyframes breath { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
 
-        #weapon-hand { position: absolute; bottom: -20px; right: -20px; width: 300px; z-index: 50; pointer-events: none; transform-origin: bottom right; transition: filter 0.5s; }
+        #weapon-hand { 
+            position: absolute; bottom: -20px; right: -20px; width: 300px; z-index: 50; pointer-events: none; transform-origin: bottom right; transition: filter 0.5s; 
+            will-change: transform, filter; 
+        }
 
-        /* --- FOOTER --- */
-        #footer { position: relative; height: 160px; background: #000; display: flex; justify-content: center; align-items: center; gap: 20px; border-top: 2px solid #333; z-index: 200; }
+        #footer { position: relative; height: 160px; background: #000; display: flex; justify-content: center; align-items: center; gap: 20px; border-top: 2px solid #333; z-index: 200; flex-shrink: 0; }
         
         .action-btn { position: relative; border-radius: 50%; background: #151515; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: 0.2s; touch-action: manipulation; }
         .main-strike { width: 90px; height: 90px; border: 4px solid #555; transition: border 1s, box-shadow 1s; }
@@ -118,7 +119,7 @@
 
         @keyframes strike { 0% { transform: rotate(0deg); } 25% { transform: rotate(-25deg) translate(-20px, -60px); } 100% { transform: rotate(0deg); } }
         .weapon-attack { animation: strike 0.4s ease-out forwards; }
-        .hit-shake { transform: scale(0.97) translate(4px, 0); filter: brightness(1.2) !important; transition: 0.04s !important; }
+        .hit-shake { transform: scale(0.97) translate(4px, 0); filter: brightness(1.2) drop-shadow(0 0 25px var(--target-aura)) !important; transition: 0.04s !important; }
         .shatter { opacity: 0 !important; transition: opacity 1.2s linear !important; }
         
         #loot-alert { position: absolute; top: 130px; width: 100%; text-align: center; color: var(--gold); font-size: 1.5rem; font-weight: 900; text-shadow: 0 0 10px black; pointer-events: none; opacity: 0; z-index: 1000; transition: 0.5s; }
@@ -191,7 +192,7 @@
             level: 1, exp: 0, coins: 0, ore: 0, fish: 0,
             active: false, power: 1, speed: 2500,
             isBuffed: false, oreReq: 5, fishReq: 3, polish: 0,
-            hasSword: false, hasDagger: false, hasGreatsword: false, hasScythe: false,
+            hasSword: false, hasDagger: false, hasGreatsword: false, hasScythe: false, hasRelic: false,
             currentZone: 1, forceBoss: false,
             isBoss: false, currentTarget: 'hunt',
             data: {
@@ -203,9 +204,11 @@
                 behemoth_z3: { img: 'behemoth.png', aura: '#ff0000', hp: 10000 },
                 reaper_z4: { img: 'frost_reaper.png', aura: '#00ffff', hp: 10000 },
                 titan_z4: { img: 'titan.png', aura: '#ffffff', hp: 50000 },
+                colossus_z5: { img: 'void_colossus.png', aura: '#ff00ff', hp: 500000 },
                 z2_hunt: { img: 'fire_wolf.png', aura: '#ff4500', hp: 400 },
                 z3_hunt: { img: 'behemoth.png', aura: '#ff0000', hp: 1500 },
-                z4_hunt: { img: 'frost_reaper.png', aura: '#00ffff', hp: 5000 }
+                z4_hunt: { img: 'frost_reaper.png', aura: '#00ffff', hp: 5000 },
+                z5_hunt: { img: 'void_shade.png', aura: '#ff00ff', hp: 25000 }
             }
         };
 
@@ -237,7 +240,9 @@
             if (savedData) {
                 try {
                     const loaded = JSON.parse(savedData);
+                    const freshData = state.data;
                     state = Object.assign(state, loaded); 
+                    state.data = Object.assign({}, freshData, loaded.data); 
                     state.active = false;
                     restoreVisuals();
                 } catch(e) { console.error("Load failed."); }
@@ -261,23 +266,31 @@
             if (state.currentZone === 2) auraColor = "var(--zone2-purple)";
             if (state.currentZone === 3) auraColor = "var(--zone3-orange)";
             if (state.currentZone === 4) auraColor = "var(--zone4-cyan)";
+            if (state.currentZone === 5) auraColor = "var(--zone5-magenta)";
             
             root.style.setProperty('--current-aura', auraColor);
             document.getElementById('fish-count-ui').style.color = auraColor;
             document.getElementById('zone-mult-ui').style.color = auraColor;
 
-            if (state.currentZone >= 2) { 
+            if (state.currentZone === 1) {
+                bg.style.backgroundImage = "url('background.png')";
+                bg.style.filter = "none";
+            } else if (state.currentZone === 2) { 
+                bg.style.backgroundImage = "url('background.png')";
                 bg.style.filter = "hue-rotate(140deg) brightness(0.4) contrast(1.5)"; 
-            }
-            if (state.currentZone >= 3) { 
-                bg.classList.add('heat-haze'); 
+            } else if (state.currentZone === 3) { 
+                bg.style.backgroundImage = "url('background.png')";
                 bg.style.filter = "sepia(1) saturate(2) hue-rotate(-30deg) brightness(0.3)"; 
-            }
-            if (state.currentZone >= 4) { 
+            } else if (state.currentZone === 4) { 
                 bg.style.backgroundImage = "url('background2.png')"; 
+                bg.style.filter = "none";
+            } else if (state.currentZone === 5) {
+                bg.style.backgroundImage = "url('background5.png')";
+                bg.style.filter = "none";
             }
             
-            if (state.hasScythe) weaponEl.src = 'glacial_scythe.png';
+            if (state.hasRelic) weaponEl.src = 'aether_relic.png';
+            else if (state.hasScythe) weaponEl.src = 'glacial_scythe.png';
             else if (state.hasGreatsword) weaponEl.src = 'magma_greatsword.png';
             else if (state.hasDagger) weaponEl.src = 'wolf_dagger.png';
             else if (state.hasSword) weaponEl.src = 'sword.png';
@@ -306,10 +319,15 @@
             actionTimer = setTimeout(() => {
                 let pMult = 1 + (Number(state.polish || 0) * 0.15);
                 let dmg = 34 * state.power * pMult;
-                if (state.hasScythe) dmg *= 4; 
+
+                if (state.hasRelic) dmg *= 10;
+                else if (state.hasScythe) dmg *= 4; 
                 else if (state.hasGreatsword) dmg *= 3; 
                 else if (state.hasDagger) dmg *= 1.5; 
                 else if (state.hasSword) dmg *= 2;
+
+                if (state.isBuffed) dmg *= 1.25;
+
                 hp -= Math.max(1, dmg);
                 targetEl.classList.add('hit-shake');
                 setTimeout(() => targetEl.classList.remove('hit-shake'), 40);
@@ -324,7 +342,7 @@
             let penalty = 1.0;
             if (state.currentZone === 1 && state.hasSword) penalty = 0.5;
             else if (state.currentZone === 2 && state.hasDagger) penalty = 0.33;
-            let zMults = [0, 1, 2, 5, 10];
+            let zMults = [0, 1, 2, 5, 10, 25];
             let zMult = zMults[state.currentZone] || 1;
             if (state.isBoss) {
                 state.coins += Math.round(100 * penalty * zMult);
@@ -332,6 +350,7 @@
                 if (!state.hasDagger && state.currentZone === 2 && Math.random() < 0.15) unlockItem('wolf_dagger.png', 'WOLF DAGGER UNLOCKED!');
                 if (!state.hasGreatsword && state.currentZone === 3 && Math.random() < 0.05) unlockItem('magma_greatsword.png', 'MAGMA SWORD UNLOCKED!');
                 if (!state.hasScythe && state.currentZone === 4 && Math.random() < 0.05) unlockItem('glacial_scythe.png', 'SCYTHE UNLOCKED!');
+                if (!state.hasRelic && state.currentZone === 5 && Math.random() < 0.01) unlockItem('aether_relic.png', 'AETHER RELIC UNLOCKED!');
             } else {
                 state.coins += Math.round(10 * penalty * zMult);
                 if (state.currentTarget.includes('mine')) state.ore += Math.round(1 * penalty * zMult);
@@ -345,14 +364,14 @@
 
         function buyBounty() {
             if (state.forceBoss) return;
-            let costs = [0, 100, 500, 2500, 10000];
-            let cost = costs[state.currentZone] || 10000;
+            let costs = [0, 100, 500, 2500, 10000, 50000];
+            let cost = costs[state.currentZone] || 50000;
             if (state.coins >= cost) { state.coins -= cost; state.forceBoss = true; updateUI(); }
         }
 
         function polishWeapon() {
-            let pBase = [0, 500, 2500, 10000, 25000];
-            let base = pBase[state.currentZone] || 25000;
+            let pBase = [0, 500, 2500, 10000, 25000, 100000];
+            let base = pBase[state.currentZone] || 100000;
             let cost = base * (state.polish + 1);
             if (state.coins >= cost && state.polish < 3) {
                 state.coins -= cost; state.polish++;
@@ -363,9 +382,15 @@
 
         function applyPolishEffects() {
             let glw = "none";
-            if (state.polish === 1) glw = "brightness(1.1) drop-shadow(0 0 8px gold)";
-            if (state.polish === 2) glw = "brightness(1.3) drop-shadow(0 0 18px gold)";
-            if (state.polish === 3) glw = "brightness(1.6) drop-shadow(0 0 28px white)";
+            if (state.hasRelic) {
+                if (state.polish === 1) glw = "brightness(1.1) drop-shadow(0 0 10px #ff00ff)";
+                if (state.polish === 2) glw = "brightness(1.3) drop-shadow(0 0 20px #ff00ff) drop-shadow(0 0 10px #00ffff)";
+                if (state.polish === 3) glw = "brightness(1.6) drop-shadow(0 0 35px #ffffff) drop-shadow(0 0 15px #ff00ff)";
+            } else {
+                if (state.polish === 1) glw = "brightness(1.1) drop-shadow(0 0 8px gold)";
+                if (state.polish === 2) glw = "brightness(1.3) drop-shadow(0 0 18px gold)";
+                if (state.polish === 3) glw = "brightness(1.6) drop-shadow(0 0 28px white)";
+            }
             weaponEl.style.filter = glw;
         }
 
@@ -374,6 +399,7 @@
             if (img.includes('dagger')) state.hasDagger = true;
             if (img.includes('greatsword')) state.hasGreatsword = true;
             if (img.includes('scythe')) state.hasScythe = true;
+            if (img.includes('relic')) state.hasRelic = true;
             state.polish = 0; 
             weaponEl.src = img;
             weaponEl.style.filter = "none";
@@ -388,20 +414,20 @@
             if (state.level >= 35 && state.hasSword && state.currentZone === 1) { gt.style.display = 'block'; gt.innerText = "ZONE 2: BLIGHTED PEAK"; }
             else if (state.level >= 75 && state.hasDagger && state.currentZone === 2) { gt.style.display = 'block'; gt.innerText = "ZONE 3: VOLCANIC FOREST"; }
             else if (state.level >= 100 && state.hasGreatsword && state.currentZone === 3) { gt.style.display = 'block'; gt.innerText = "ZONE 4: GLACIAL TUNDRA"; }
+            else if (state.level >= 150 && state.hasScythe && state.currentZone === 4) { gt.style.display = 'block'; gt.innerText = "ZONE 5: VOID NEBULA"; }
             else gt.style.display = 'none';
         }
 
         function advanceZone() {
             state.currentZone++;
-            state.polish = 0;
             restoreVisuals();
         }
 
         function respawn() {
             targetEl.classList.remove('shatter', 'boss-style', 'wolf-boss');
             state.isBoss = false;
-            let bK = ['boss_z1', 'wolf_z2', 'behemoth_z3', 'titan_z4'];
-            let bossKey = bK[state.currentZone-1] || 'titan_z4';
+            let bK = ['boss_z1', 'wolf_z2', 'behemoth_z3', 'titan_z4', 'colossus_z5'];
+            let bossKey = bK[state.currentZone-1] || 'colossus_z5';
             
             if (state.forceBoss || (Math.random() < 0.10)) {
                 state.currentTarget = bossKey;
@@ -411,16 +437,15 @@
             } else {
                 let pool = ['hunt', 'mine', 'fish'];
                 let type = pool[Math.floor(Math.random()*3)];
-                if (type === 'hunt' && state.currentZone > 1) {
-                    state.currentTarget = `z${state.currentZone}_hunt`;
-                } else {
-                    state.currentTarget = type;
-                }
+                state.currentTarget = (type === 'hunt' && state.currentZone > 1) ? `z${state.currentZone}_hunt` : type;
             }
             const info = state.data[state.currentTarget];
             hp = info ? info.hp : 100;
             targetEl.src = info ? info.img : 'slime.png';
-            targetEl.style.filter = `drop-shadow(0 0 25px ${info ? info.aura : '#fff'})`;
+            
+            // Set aura color as a CSS variable so the hit animation doesn't overwrite it
+            document.documentElement.style.setProperty('--target-aura', info ? info.aura : '#fff');
+            
             updateUI();
             if (state.active) actionLoop();
         }
@@ -440,61 +465,47 @@
         function useOre() { if (state.ore >= state.oreReq) { state.ore -= state.oreReq; state.power += 0.5; state.oreReq = Math.floor(state.oreReq * 1.6); updateUI(); } }
 
         function useFish() {
-            const currentFishReq = [0, 3, 15, 50, 200][state.currentZone] || 200;
+            const fCosts = [0, 3, 15, 50, 200, 500];
+            const currentFishReq = fCosts[state.currentZone] || 500;
             if (state.fish >= currentFishReq && !state.isBuffed) {
                 state.fish -= currentFishReq; state.isBuffed = true;
                 const prevSpeed = state.speed; state.speed = 700;
-                
                 const duration = 10000;
                 const start = Date.now();
                 const circ = 226; 
-                
                 const timer = setInterval(() => {
                     const elapsed = Date.now() - start;
                     const remaining = Math.max(0, 1 - (elapsed / duration));
                     buffFillRing.style.strokeDashoffset = circ * (1 - remaining);
-                    
                     if (elapsed >= duration) {
                         clearInterval(timer);
-                        state.isBuffed = false;
-                        state.speed = prevSpeed;
+                        state.isBuffed = false; state.speed = prevSpeed;
                         buffFillRing.style.strokeDashoffset = 226;
                         updateUI();
                     }
                 }, 50);
-                
                 updateUI();
             }
         }
 
         function updateUI() {
-            // Hacker Check
-            if (state.coins > 1000000000) { document.getElementById('hacker-overlay').style.display = 'flex'; }
-
+            if (state.coins > 10000000000) { document.getElementById('hacker-overlay').style.display = 'flex'; }
             document.getElementById('coins').innerText = Math.floor(state.coins || 0);
             document.getElementById('ore').innerText = state.ore;
             document.getElementById('fish').innerText = state.fish;
             document.getElementById('ore-cost').innerText = state.oreReq;
-            
-            let fCosts = [0, 3, 15, 50, 200];
-            let currentFishReq = fCosts[state.currentZone] || 200;
+            let currentFishReq = [0, 3, 15, 50, 200, 500][state.currentZone] || 500;
             document.getElementById('fish-cost').innerText = currentFishReq;
-            
-            let zMults = [0, 1, 2, 5, 10];
+            let zMults = [0, 1, 2, 5, 10, 25];
             document.getElementById('zone-mult-ui').innerText = `LOOT: x${zMults[state.currentZone] || 1}`;
-
             document.getElementById('polish-lv').innerText = state.polish;
-            let bC = [0, 100, 500, 2500, 10000];
-            document.getElementById('bounty-cost').innerText = bC[state.currentZone] || 10000;
-            let pB = [0, 500, 2500, 10000, 25000];
-            document.getElementById('polish-cost').innerText = (pB[state.currentZone] || 25000) * (state.polish + 1);
-            
-            const bBtn = document.getElementById('btn-bounty');
-            if (state.forceBoss) bBtn.classList.add('locked'); else bBtn.classList.remove('locked');
-
-            const fBtn = document.getElementById('btn-forge'), buffBtn = document.getElementById('btn-buff');
-            if (state.ore >= state.oreReq) fBtn.classList.remove('disabled'); else fBtn.classList.add('disabled');
-            if (state.fish >= currentFishReq && !state.isBuffed) buffBtn.classList.remove('disabled'); else if(state.isBuffed) buffBtn.classList.add('disabled'); else buffBtn.classList.add('disabled');
+            let bC = [0, 100, 500, 2500, 10000, 50000];
+            document.getElementById('bounty-cost').innerText = bC[state.currentZone] || 50000;
+            let pB = [0, 500, 2500, 10000, 25000, 100000];
+            document.getElementById('polish-cost').innerText = (pB[state.currentZone] || 100000) * (state.polish + 1);
+            if (state.forceBoss) document.getElementById('btn-bounty').classList.add('locked'); else document.getElementById('btn-bounty').classList.remove('locked');
+            if (state.ore >= state.oreReq) document.getElementById('btn-forge').classList.remove('disabled'); else document.getElementById('btn-forge').classList.add('disabled');
+            if (state.fish >= currentFishReq && !state.isBuffed) document.getElementById('btn-buff').classList.remove('disabled'); else document.getElementById('btn-buff').classList.add('disabled');
         }
 
         window.onload = () => { loadGame(); if (state.level === 1) { updateUI(); respawn(); updateXPOrb(); } };
